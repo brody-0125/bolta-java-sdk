@@ -13,10 +13,25 @@ package io.bolta.exception;
  * </ul>
  */
 public class BoltaException extends RuntimeException {
+    /**
+     * Constructs a new BoltaException with the specified message.
+     * <p>
+     * 지정된 메시지로 새 BoltaException을 생성합니다.
+     *
+     * @param message the detail message
+     */
     public BoltaException(String message) {
         super(message);
     }
 
+    /**
+     * Constructs a new BoltaException with the specified message and cause.
+     * <p>
+     * 지정된 메시지와 원인으로 새 BoltaException을 생성합니다.
+     *
+     * @param message the detail message
+     * @param cause   the cause of this exception
+     */
     public BoltaException(String message, Throwable cause) {
         super(message, cause);
     }

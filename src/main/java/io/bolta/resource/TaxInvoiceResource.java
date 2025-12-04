@@ -8,6 +8,7 @@ import io.bolta.http.BoltaHttpHeader;
 import io.bolta.http.HttpMethod;
 import io.bolta.http.HttpRequest;
 import io.bolta.model.ContractTerminationRequest;
+import io.bolta.model.DuplicateCorrectionRequest;
 import io.bolta.model.IssuanceKey;
 import io.bolta.model.SupplyCostChangeRequest;
 import io.bolta.model.TaxInvoice;
@@ -315,6 +316,128 @@ public final class TaxInvoiceResource {
             return response.issuanceKey;
         } catch (IOException ioException) {
             throw new BoltaException("Failed to serialize supply cost change request", ioException);
+        }
+    }
+
+    /**
+     * Issues a modified tax invoice due to duplicate issuance by mistake.
+     * <p>
+     * 착오로 이중 발급한 경우 수정 세금계산서를 발행합니다 (착오로 이중 발급).
+     *
+     * @param issuanceKey The issuance key of the original tax invoice (원본 세금계산서의
+     *                    발급키)
+     * @param request     The duplicate correction request details (이중 발급 정정 요청 정보)
+     * @return The issuance key of the modified tax invoice (수정 세금계산서의 발급키)
+     */
+    public IssuanceKey issueDuplicateCorrection(String issuanceKey, DuplicateCorrectionRequest request) {
+        return issueDuplicateCorrection(issuanceKey, request, null);
+    }
+
+    /**
+     * Issues a modified tax invoice due to duplicate issuance by mistake with options.
+     * <p>
+     * 옵션과 함께 착오로 이중 발급한 경우 수정 세금계산서를 발행합니다 (착오로 이중 발급).
+     *
+     * @param issuanceKey The issuance key of the original tax invoice (원본 세금계산서의
+     *                    발급키)
+     * @param request     The duplicate correction request details (이중 발급 정정 요청 정보)
+     * @param options     Additional request options (추가 요청 옵션)
+     * @return The issuance key of the modified tax invoice (수정 세금계산서의 발급키)
+     */
+    public IssuanceKey issueDuplicateCorrection(String issuanceKey, DuplicateCorrectionRequest request,
+            TaxInvoiceIssuanceRequestOptions options) {
+        if (issuanceKey == null || issuanceKey.isEmpty()) {
+            throw new IllegalArgumentException("issuanceKey is required");
+        }
+        if (request == null) {
+            throw new IllegalArgumentException("request is required");
+        }
+
+        try {
+            String json = client.getObjectMapper().writeValueAsString(request);
+
+            HttpRequest.Builder requestBuilder = HttpRequest.builder()
+                    .url(client.buildUrl(BASE_PATH + "/%s/amend/duplicate", issuanceKey))
+                    .method(HttpMethod.POST)
+                    .header(BoltaHttpHeader.CONTENT_TYPE, BoltaHttpHeader.APPLICATION_JSON)
+                    .body(json);
+
+            if (options != null) {
+                if (options.getCustomerKey() != null) {
+                    requestBuilder.header(BoltaHttpHeader.CUSTOMER_KEY, options.getCustomerKey());
+                }
+                if (options.getClientReferenceId() != null) {
+                    requestBuilder.header(BoltaHttpHeader.BOLTA_CLIENT_REFERENCE_ID, options.getClientReferenceId());
+                }
+            }
+
+            TaxInvoiceIssueResponse response = client.execute(requestBuilder.build(), TaxInvoiceIssueResponse.class,
+                    options);
+            return response.issuanceKey;
+        } catch (IOException ioException) {
+            throw new BoltaException("Failed to serialize duplicate correction request", ioException);
+        }
+    }
+
+    /**
+     * Issues a modified tax invoice due to error in entries.
+     * <p>
+     * 착오로 기재사항을 잘못 적은 경우 수정 세금계산서를 발행합니다 (착오로 기재사항을 잘못 적은 경우).
+     *
+     * @param issuanceKey The issuance key of the original tax invoice (원본 세금계산서의
+     *                    발급키)
+     * @param invoice     The corrected tax invoice with updated information (정정된 세금계산서
+     *                    정보)
+     * @return The issuance key of the modified tax invoice (수정 세금계산서의 발급키)
+     */
+    public IssuanceKey issueErrorCorrection(String issuanceKey, TaxInvoice invoice) {
+        return issueErrorCorrection(issuanceKey, invoice, null);
+    }
+
+    /**
+     * Issues a modified tax invoice due to error in entries with options.
+     * <p>
+     * 옵션과 함께 착오로 기재사항을 잘못 적은 경우 수정 세금계산서를 발행합니다 (착오로 기재사항을 잘못 적은 경우).
+     *
+     * @param issuanceKey The issuance key of the original tax invoice (원본 세금계산서의
+     *                    발급키)
+     * @param invoice     The corrected tax invoice with updated information (정정된 세금계산서
+     *                    정보)
+     * @param options     Additional request options (추가 요청 옵션)
+     * @return The issuance key of the modified tax invoice (수정 세금계산서의 발급키)
+     */
+    public IssuanceKey issueErrorCorrection(String issuanceKey, TaxInvoice invoice,
+            TaxInvoiceIssuanceRequestOptions options) {
+        if (issuanceKey == null || issuanceKey.isEmpty()) {
+            throw new IllegalArgumentException("issuanceKey is required");
+        }
+        if (invoice == null) {
+            throw new IllegalArgumentException("invoice is required");
+        }
+
+        try {
+            String json = client.getObjectMapper().writeValueAsString(invoice);
+
+            HttpRequest.Builder requestBuilder = HttpRequest.builder()
+                    .url(client.buildUrl(BASE_PATH + "/%s/amend/error", issuanceKey))
+                    .method(HttpMethod.POST)
+                    .header(BoltaHttpHeader.CONTENT_TYPE, BoltaHttpHeader.APPLICATION_JSON)
+                    .body(json);
+
+            if (options != null) {
+                if (options.getCustomerKey() != null) {
+                    requestBuilder.header(BoltaHttpHeader.CUSTOMER_KEY, options.getCustomerKey());
+                }
+                if (options.getClientReferenceId() != null) {
+                    requestBuilder.header(BoltaHttpHeader.BOLTA_CLIENT_REFERENCE_ID, options.getClientReferenceId());
+                }
+            }
+
+            TaxInvoiceIssueResponse response = client.execute(requestBuilder.build(), TaxInvoiceIssueResponse.class,
+                    options);
+            return response.issuanceKey;
+        } catch (IOException ioException) {
+            throw new BoltaException("Failed to serialize error correction request", ioException);
         }
     }
 

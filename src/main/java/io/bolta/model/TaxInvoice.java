@@ -39,9 +39,6 @@ import java.util.Objects;
  * <li>착오로 이중 발급</li>
  * <li>착오로 기재사항을 잘못 적은 경우</li>
  * </ul>
- * <p>
- * For validation requirements, see
- * {@link io.bolta.model.TaxInvoiceValidationTest}.
  */
 public final class TaxInvoice {
     /**
@@ -141,7 +138,7 @@ public final class TaxInvoice {
         return supplied;
     }
 
-    public List<TaxInvoiceLineItem> getTaxInvoiceLineItems() {
+    public List<TaxInvoiceLineItem> getItems() {
         return items == null ? null : Collections.unmodifiableList(items);
     }
 
