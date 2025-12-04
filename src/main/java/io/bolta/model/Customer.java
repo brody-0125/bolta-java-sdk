@@ -9,9 +9,6 @@ import java.util.Objects;
  * <p>
  * 볼타 전자세금계산서 시스템의 고객을 나타냅니다.
  * 고객은 공동인증서를 등록하여 볼타 플랫폼을 통해 전자세금계산서를 발행하고 받을 수 있습니다.
- * <p>
- * For validation requirements, see
- * {@link io.bolta.model.CustomerValidationTest}.
  */
 public final class Customer {
     /**

@@ -18,14 +18,6 @@ public class RequestOptions {
      * 이 요청에 대한 재시도 구성입니다.
      * 설정된 경우, 클라이언트는 정책에 따라 실패한 요청을 자동으로 재시도합니다.
      */
-    /**
-     * Retry configuration for this request.
-     * When set, the client will automatically retry failed requests according to
-     * the policy.
-     * <p>
-     * 이 요청에 대한 재시도 구성입니다.
-     * 설정된 경우, 클라이언트는 정책에 따라 실패한 요청을 자동으로 재시도합니다.
-     */
     private final RetryOption retryOption;
 
     /**

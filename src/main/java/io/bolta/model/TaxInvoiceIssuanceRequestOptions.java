@@ -60,9 +60,9 @@ public final class TaxInvoiceIssuanceRequestOptions extends RequestOptions {
     }
 
     /**
-     * Builder for constructing TaxInvoiceRequestOptions instances.
+     * Builder for constructing TaxInvoiceIssuanceRequestOptions instances.
      * <p>
-     * TaxInvoiceRequestOptions 인스턴스를 생성하기 위한 빌더입니다.
+     * TaxInvoiceIssuanceRequestOptions 인스턴스를 생성하기 위한 빌더입니다.
      */
     public static class Builder extends RequestOptions.Builder<Builder> {
         private String customerKey;
@@ -98,7 +98,7 @@ public final class TaxInvoiceIssuanceRequestOptions extends RequestOptions {
 
     @Override
     public String toString() {
-        return "TaxInvoiceRequestOptions{" +
+        return "TaxInvoiceIssuanceRequestOptions{" +
                 "customerKey='" + customerKey + '\'' +
                 ", clientReferenceId='" + clientReferenceId + '\'' +
                 ", retryOption=" + getRetryOption() +

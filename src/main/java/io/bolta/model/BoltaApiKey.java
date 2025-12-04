@@ -36,6 +36,13 @@ public final class BoltaApiKey {
         return new BoltaApiKey(value);
     }
 
+    /**
+     * Returns the API key value.
+     * <p>
+     * API 키 값을 반환합니다.
+     *
+     * @return the API key string
+     */
     public String getValue() {
         return value;
     }

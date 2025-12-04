@@ -93,7 +93,7 @@ TaxInvoice invoice = TaxInvoice.builder()
                 .build()
         ))
         .build())
-    .taxInvoiceLineItems(List.of(
+    .items(List.of(
         TaxInvoiceLineItem.builder()
             .date("2024-01-15")
             .name("Product Name")
@@ -115,6 +115,44 @@ System.out.println("Issued invoice: " + key.getValue());
 ```java
 TaxInvoice invoice = app.taxInvoices().get("ISSUANCE_KEY_HERE");
 System.out.println("Supplier: " + invoice.getSupplier().getOrganizationName());
+```
+
+### Revision (Modified Issuance) - 수정발행
+
+Issue a revised invoice to correct errors or handle duplicate issuance mistakes:
+
+#### Correction for Errors (기재사항 오류 정정)
+
+```java
+import io.bolta.model.RevisionType;
+
+// Create the corrected invoice data
+TaxInvoice correctedInvoice = TaxInvoice.builder()
+    .date("2024-01-15")
+    .purpose(IssuancePurpose.RECEIPT)
+    .supplier(supplier)
+    .supplied(supplied)
+    .items(correctedItems)  // Corrected items
+    .description("Corrected invoice")
+    .build();
+
+// Issue revision with the original invoice key
+IssuanceKey newKey = app.taxInvoices().revise(
+    "ORIGINAL_ISSUANCE_KEY",
+    RevisionType.CORRECTION,
+    correctedInvoice
+);
+```
+
+#### Mistaken Duplicate Issuance (착오에 의한 이중발급)
+
+```java
+// Issue revision to cancel a duplicate invoice
+IssuanceKey newKey = app.taxInvoices().revise(
+    "DUPLICATE_INVOICE_KEY",
+    RevisionType.DUPLICATE_MISTAKE,
+    correctedInvoice
+);
 ```
 
 ### Customer Management

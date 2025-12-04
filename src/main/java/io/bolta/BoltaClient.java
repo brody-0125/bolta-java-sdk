@@ -7,6 +7,7 @@ import io.bolta.exception.BoltaApiException;
 import io.bolta.exception.BoltaException;
 import io.bolta.http.BoltaHttpHeader;
 import io.bolta.http.HttpClient;
+import io.bolta.http.HttpClients;
 import io.bolta.http.HttpHeaders;
 import io.bolta.http.HttpRequest;
 import io.bolta.http.HttpResponse;
@@ -43,32 +44,83 @@ public final class BoltaClient {
     private final String baseUrl;
     private final BoltaApiKey apiKey;
 
+    /**
+     * Builder for constructing BoltaClient instances.
+     * <p>
+     * BoltaClient 인스턴스를 생성하기 위한 빌더입니다.
+     */
     public static class Builder {
         private HttpClient httpClient;
         private ObjectMapper objectMapper;
         private String baseUrl;
         private BoltaApiKey apiKey;
 
+        /**
+         * Sets a custom HTTP client implementation.
+         * <p>
+         * If not set, a default OkHttp-based client will be used.
+         * <p>
+         * 커스텀 HTTP 클라이언트 구현을 설정합니다.
+         * 설정하지 않으면 기본 OkHttp 기반 클라이언트가 사용됩니다.
+         *
+         * @param httpClient the HTTP client implementation
+         * @return this builder
+         */
         public Builder httpClient(HttpClient httpClient) {
             this.httpClient = httpClient;
             return this;
         }
 
+        /**
+         * Sets a custom ObjectMapper for JSON serialization/deserialization.
+         * <p>
+         * If not set, a default ObjectMapper will be used.
+         * <p>
+         * JSON 직렬화/역직렬화를 위한 커스텀 ObjectMapper를 설정합니다.
+         * 설정하지 않으면 기본 ObjectMapper가 사용됩니다.
+         *
+         * @param objectMapper the ObjectMapper to use
+         * @return this builder
+         */
         public Builder objectMapper(ObjectMapper objectMapper) {
             this.objectMapper = objectMapper;
             return this;
         }
 
+        /**
+         * Sets the base URL for the Bolta API.
+         * <p>
+         * 볼타 API의 기본 URL을 설정합니다.
+         *
+         * @param baseUrl the base URL (e.g., "https://xapi.bolta.io")
+         * @return this builder
+         */
         public Builder baseUrl(String baseUrl) {
             this.baseUrl = baseUrl;
             return this;
         }
 
+        /**
+         * Sets the API key for authentication.
+         * <p>
+         * 인증을 위한 API 키를 설정합니다.
+         *
+         * @param apiKey the API key
+         * @return this builder
+         */
         public Builder apiKey(BoltaApiKey apiKey) {
             this.apiKey = apiKey;
             return this;
         }
 
+        /**
+         * Builds a new BoltaClient instance.
+         * <p>
+         * 새 BoltaClient 인스턴스를 생성합니다.
+         *
+         * @return the configured BoltaClient
+         * @throws IllegalArgumentException if required fields are missing
+         */
         public BoltaClient build() {
             if (apiKey == null) {
                 throw new IllegalArgumentException("API key is required");
@@ -78,6 +130,13 @@ public final class BoltaClient {
         }
     }
 
+    /**
+     * Creates a new builder for constructing a BoltaClient instance.
+     * <p>
+     * BoltaClient 인스턴스를 생성하기 위한 새 빌더를 생성합니다.
+     *
+     * @return a new Builder instance
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -96,10 +155,17 @@ public final class BoltaClient {
         if (builder.httpClient != null) {
             this.httpClient = builder.httpClient;
         } else {
-            throw new IllegalArgumentException("HttpClient is required");
+            this.httpClient = HttpClients.createDefault();
         }
     }
 
+    /**
+     * Returns the ObjectMapper used for JSON serialization/deserialization.
+     * <p>
+     * JSON 직렬화/역직렬화에 사용되는 ObjectMapper를 반환합니다.
+     *
+     * @return the ObjectMapper instance
+     */
     public ObjectMapper getObjectMapper() {
         return objectMapper;
     }

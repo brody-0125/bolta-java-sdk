@@ -44,6 +44,13 @@ public final class CustomerResource {
 
     private final BoltaClient client;
 
+    /**
+     * Constructs a new CustomerResource with the specified client.
+     * <p>
+     * 지정된 클라이언트로 새 CustomerResource를 생성합니다.
+     *
+     * @param client the BoltaClient to use for API calls
+     */
     public CustomerResource(BoltaClient client) {
         this.client = client;
     }
